@@ -1,0 +1,16 @@
+{
+  "name": "Remote Pro",
+  "short_name": "Remote",
+  "start_url": "/",
+ "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3465/3465859.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
