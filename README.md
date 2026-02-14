@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://placehold.co/1200x400/0f172a/ffffff?text=Master+Remote+Ultra" alt="Master Remote Ultra Banner" width="850">
+  <img src="https://placehold.co/1200x400/0f172a/ffffff?text=Remote" alt="Remote Banner" width="850">
 </p>
 
 
