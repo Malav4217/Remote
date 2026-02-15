@@ -93,5 +93,4 @@ To achieve a native application experience on a mobile device:
 
 ## Developed By
 
-**Malav Patel**  
-*Master of Science in Computer Science | University of Massachusetts Dartmouth (2026)*
+**Malav Patel**
