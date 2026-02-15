@@ -227,7 +227,7 @@ HTML_UI = """
 
     <div id="kb-overlay">
         <button class="kb-action-btn cancel-btn" onclick="toggleKB(false)">✕</button>
-        <input type="text" id="kb-input" placeholder="Type to PC..." autocomplete="off">
+        <input type="text" id="kb-input" placeholder="Type to PC..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
         <button class="kb-action-btn send-btn" onclick="submitText()">SEND</button>
     </div>
 
@@ -289,6 +289,35 @@ HTML_UI = """
                 input.blur(); 
             }
         }
+
+        // --- LIVE KEYBOARD LOGIC ---
+        input.addEventListener('beforeinput', (e) => {
+            // 1. Handle Backspace
+            if (e.inputType === 'deleteContentBackward') {
+                socket.emit('cmd', 'backspace');
+                return;
+            }
+
+            // 2. Handle Individual Characters
+            const char = e.data;
+            if (char) {
+                // We send the character exactly as typed (respecting lowercase)
+                socket.emit('type_live', char);
+                
+                // Prevent the text from actually staying in the input box 
+                // to keep the mobile keyboard from auto-capitalizing the next word
+                setTimeout(() => { input.value = ""; }, 10);
+            }
+        });
+
+        // 3. Handle Enter Key
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                haptic(40);
+                socket.emit('cmd', 'enter');
+                toggleKB(false);
+            }
+        });
 
         function submitText() { 
             if(input.value) { 
@@ -391,10 +420,17 @@ def handle_type(text):
     pyautogui.typewrite(text)
     pyautogui.press('enter')
 
+@socketio.on('type_live')
+def handle_live_typing(char):
+    # This will type exactly what is received (lowercase by default)
+    pyautogui.write(char)
+
 @socketio.on('cmd')
 def handle_command(cmd):
     if cmd == 'click': pyautogui.click()
     elif cmd == 'win': pyautogui.press('win')
+    elif cmd == 'enter': pyautogui.press('enter')      # FIXED: Added Enter
+    elif cmd == 'backspace': pyautogui.press('backspace') # FIXED: Added Backspace
     elif cmd == 'shutdown_now': os.system("shutdown /s /t 1")
     else: pyautogui.press(cmd)
 
